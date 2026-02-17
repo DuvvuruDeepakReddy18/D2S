@@ -22,19 +22,16 @@ module debouncer #(
         else begin
             sync_0 <= noisy;
             sync_1 <= sync_0;
-
             if (sync_1 != clean) begin
                 if (count == STABLE_CNT - 1) begin
                     clean <= sync_1;
                     count <= 18'd0;
                 end
-                else begin
+                else
                     count <= count + 18'd1;
-                end
             end
-            else begin
+            else
                 count <= 18'd0;
-            end
         end
     end
 
