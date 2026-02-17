@@ -11,9 +11,6 @@ module fibonacci_top (
     output wire       uart_txd
 );
 
-    // =================================================================
-    // RESET SYNCHRONIZER
-    // =================================================================
     reg [2:0] rst_pipe = 3'b111;
     wire reset = rst_pipe[2];
 
@@ -24,9 +21,6 @@ module fibonacci_top (
             rst_pipe <= {rst_pipe[1:0], 1'b0};
     end
 
-    // =================================================================
-    // BUTTON DEBOUNCE + EDGE DETECT
-    // =================================================================
     wire start_clean, confirm_clean, display_clean;
     wire start_pulse, confirm_pulse, display_pulse;
 
@@ -50,18 +44,12 @@ module fibonacci_top (
         .clk(clk), .reset(reset), .sig_in(display_clean), .pulse(display_pulse)
     );
 
-    // =================================================================
-    // SWITCH SYNCHRONIZER
-    // =================================================================
     wire [7:0] sw_sync;
 
     switch_sync #(.WIDTH(8)) u_sw_sync (
         .clk(clk), .reset(reset), .sw_in(sw), .sw_out(sw_sync)
     );
 
-    // =================================================================
-    // CONTROL UNIT + DATAPATH
-    // =================================================================
     wire [3:0]  state_out;
     wire        load_input;
     wire [1:0]  input_sel;
@@ -106,9 +94,6 @@ module fibonacci_top (
         .overflow_flag (overflow_flag)
     );
 
-    // =================================================================
-    // UART TX + MESSAGE CONTROLLER
-    // =================================================================
     wire       tx_start_w, tx_busy_w, tx_done_w;
     wire [7:0] tx_data_w;
 
@@ -141,9 +126,6 @@ module fibonacci_top (
         .tx_data     (tx_data_w)
     );
 
-    // =================================================================
-    // LED DISPLAY WITH MODE CYCLING
-    // =================================================================
     reg [2:0]  disp_mode;
     reg [24:0] hb_counter;
     wire       heartbeat = hb_counter[24];
